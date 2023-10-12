@@ -6,13 +6,6 @@
  *
  *
  */
-body {
-  background-color: green;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
 @media (min-width: 900px) {
   .dc-bc .has-breadcrumbs,
   header.has-breadcrumbs {
