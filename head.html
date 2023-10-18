@@ -5,7 +5,9 @@
 <link rel="icon" href="data:,">
 <!-- To ensure IE redirects -->
 <script type="text/javascript">
-  if(/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+  if(/MSIE \d|Trident.*rv:/.test(navigator.userAgent)
+  || (/safari|applewebkit/i.test(navigator.userAgent) && navigator.userAgent.match(/(?:version)\/(\d+(\.?\d+)+)/i)[1].split('.')[0] < 14)
+  ) {
     document.write('<script src="/acrobat/scripts/legacy.js"><\/script>');
   }
 </script>

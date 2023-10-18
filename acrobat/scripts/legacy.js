@@ -37,8 +37,9 @@ var getBrowserData = function (userAgent) {
   for (var i=0; i < regex.length; i++) {
     if (regex[i].browserReg.test(userAgent)) {
       var version = userAgent.match(regex[i].versionReg);
-      var version = userAgent.match(regex[i].versionReg);
+      browser.version = version[1];
       browser.name = regex[i].name;
+      console.log(browser.version);
       console.log(browser.name);
     }
   }
@@ -55,5 +56,5 @@ if (window.browser.name === 'Internet Explorer' ||
   window.browser.name === 'Microsoft Edge' && !window.browser.version ||
   window.browser.name === 'Safari' && window.browser.version.split('.')[0] < 14 ||
   window.browser.name === 'Safari' && !window.browser.version ) {
-  window.location.href = EOLBrowserPage;
+  window.location.assign(EOLBrowserPage);
 }
