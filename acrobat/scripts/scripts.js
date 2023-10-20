@@ -309,7 +309,7 @@ const { ietf } = getLocale(locales);
   addLocale(ietf);
 
   setConfig({ ...CONFIG, miloLibs });
-  loadLana({ clientId: 'dxdc' });
+  loadLana({ clientId: 'dxdc', tags:'Cat=DC_Milo'});
 
   // get event back form dc web and then load area
   await loadArea(document, false);
