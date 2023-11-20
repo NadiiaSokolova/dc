@@ -14,6 +14,7 @@ const PREVIEW_DIS = 'preview-displayed';
 const TRY_ANOTHER = 'try-another-file-start';
 // const UPSELL_DIS = 'upsell-displayed';
 const FADE = 'review fade-in';
+window.dc_hosted.disableChromeExtensionBanner = true;
 
 export default function init(element) {
   const wrapper = element;
