@@ -13,6 +13,18 @@
 /**
  * The decision engine for where to get Milo's libs from.
  */
+
+const AUDIENCES = {
+  mobile: () => window.innerWidth < 600,
+  desktop: () => window.innerWidth >= 600,
+};
+
+function getMetadata1(name, doc = document) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  const meta = [...doc.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+  return meta || '';
+}
+
 const setLibs = (prodLibs, location) => {
   const { hostname, search } = location || window.location;
   // eslint-disable-next-line compat/compat
@@ -262,6 +274,44 @@ const CONFIG = {
   },
 };
 
+let pluginContext = {};
+if (getMetadata1('experiment')) {
+  window.hlx = {};
+  const utilsLoaded = new Promise((resolve, reject) => {
+    (async () => {
+      try {
+        const { getAllMetadata, loadCSS, loadScript, sampleRUM, toCamelCase, toClassName } = await import('./utils.js');
+        resolve({ getAllMetadata, loadCSS, loadScript, sampleRUM, toCamelCase, toClassName });
+      } catch (err) {
+        console.log('Failed loading utils', err);
+        reject();
+      }
+    })();
+  });
+
+  const experimentPluginLoaded = new Promise((resolve, reject) => {
+    (async () => {
+      try {
+        const { loadEager } = await import('../../plugins/experimentation/src/index.js');
+        resolve(loadEager);
+      } catch (err) {
+        console.log('Failed loading experiment plugin', err);
+        reject();
+      }
+    })();
+  });
+  
+  try {
+    await Promise.all([utilsLoaded, experimentPluginLoaded]).then(async (results) => {
+      pluginContext = { ...results[0], getMetadata: getMetadata1 };
+      const loadEager = results[1];
+      await loadEager(document, { audiences: AUDIENCES }, pluginContext);
+    });
+  } catch (err) {
+    console.log('Experiment failed', err);
+  }
+}
+
 // Default to loading the first image as eager.
 (async function loadLCPImage() {
   const lcpImg = document.querySelector('img');
@@ -305,6 +355,7 @@ const { ietf } = getLocale(locales);
     const { default: dcConverter } = await import(`../blocks/${blockName}/${blockName}.js`);
     await dcConverter(widgetBlock);
   }
+
 
   // Setup CSP
   (async () => {
@@ -360,4 +411,9 @@ const { ietf } = getLocale(locales);
       window.dispatchEvent(imsIsReady);
     }
   }, 1000);
+
+  if (window.hlx?.experiment && getMetadata1('experiment')) {
+    const { loadLazy: runLazy } = await import('../../plugins/experimentation/src/index.js');
+    await runLazy(document, { audiences: AUDIENCES }, pluginContext);
+  }
 }());
