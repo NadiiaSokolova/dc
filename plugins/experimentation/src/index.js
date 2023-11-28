@@ -426,6 +426,7 @@ export async function runExperiment(document, options, context) {
   console.debug(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
   // console.log(experimentConfig);
 
+  experimentConfig.selectedVariant = 'challenger-1';
   if (experimentConfig.selectedVariant === experimentConfig.variantNames[0]) {
     return false;
   }
@@ -655,9 +656,9 @@ function adjustedRumSamplingRate(checkpoint, options, context) {
 }
 
 export async function loadEager(document, options, context) {
-  // context.sampleRUM.always.on('audiences', adjustedRumSamplingRate('audiences', options, context));
-  // context.sampleRUM.always.on('campaign', adjustedRumSamplingRate('campaign', options, context));
-  // context.sampleRUM.always.on('experiment', adjustedRumSamplingRate('experiment', options, context));
+  context.sampleRUM.always.on('audiences', adjustedRumSamplingRate('audiences', options, context));
+  context.sampleRUM.always.on('campaign', adjustedRumSamplingRate('campaign', options, context));
+  context.sampleRUM.always.on('experiment', adjustedRumSamplingRate('experiment', options, context));
   let res = await runCampaign(document, options, context);
   if (!res) {
     res = await runExperiment(document, options, context);

@@ -58,6 +58,7 @@ const connectSrc = [
   '*.hlx.live',
   'cdn.linkedin.oribi.io',
   'adobedc.demdex.net/',
+  'https://helix-pages.anywhere.run/',
   ';',
 ];
 
