@@ -280,7 +280,6 @@ async function decorateExperimentPill(overlay, options, context) {
     return;
   }
   // eslint-disable-next-line no-console
-  console.log('preview experiment', experiment);
 
   const pill = createPopupButton(
     `Experiment: ${config.id}`,
@@ -426,8 +425,7 @@ async function decorateAudiencesPill(overlay, options, context) {
  */
 export default async function decoratePreviewMode(document, options, context) {
   try {
-    context.loadCSS(`http://localhost:3000/plugins/experimentation/src/preview.css`);
-    // context.loadCSS(`${options.basePath || window.hlx.codeBasePath}/plugins/experimentation/src/preview.css`);
+    context.loadCSS(`${options.basePath || window.hlx.codeBasePath}/plugins/experimentation/src/preview.css`);
     const overlay = getOverlay(options);
     await decorateAudiencesPill(overlay, options, context);
     await decorateCampaignPill(overlay, options, context);

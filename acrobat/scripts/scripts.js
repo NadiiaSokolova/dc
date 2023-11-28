@@ -303,6 +303,8 @@ if (getMetadata1('experiment')) {
   
   try {
     await Promise.all([utilsLoaded, experimentPluginLoaded]).then(async (results) => {
+      const { sampleRUM } = results[0];
+      sampleRUM('top');
       pluginContext = { ...results[0], getMetadata: getMetadata1 };
       const loadEager = results[1];
       await loadEager(document, { audiences: AUDIENCES }, pluginContext);
@@ -414,6 +416,6 @@ const { ietf } = getLocale(locales);
 
   if (window.hlx?.experiment && getMetadata1('experiment')) {
     const { loadLazy: runLazy } = await import('../../plugins/experimentation/src/index.js');
-    await runLazy(document, { audiences: AUDIENCES }, pluginContext);
+    await runLazy(document, { audiences: AUDIENCES, basePath: window.location.origin }, pluginContext);
   }
 }());
